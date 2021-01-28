@@ -21,6 +21,7 @@ Plug 'w0rp/ale'
 Plug 'davidhalter/jedi-vim'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'zchee/deoplete-jedi'
+Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}
 Plug 'jiangmiao/auto-pairs'
 
 " " Multi cursors
@@ -32,6 +33,9 @@ Plug 'honza/vim-snippets'
 
 " Comments
 Plug 'tpope/vim-commentary'
+
+" Go
+" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 call plug#end()
 
@@ -122,8 +126,15 @@ let g:ale_fixers = {
 \   'python': ['black','isort'],
 \   'javascript': ['prettier','eslint'],
 \   'css': ['prettier'],
-\   'html': ['prettier']
+\   'html': ['prettier'],
+\   'go': ['gofmt', 'goimports'],
 \}
+
+let g:ale_linters = {
+             \ 'go': ['staticcheck'],
+             \ 'python': ['black'],
+             \}
+
 let g:ale_fix_on_save = 1
 let g:ale_completion_enabled = 1
 
@@ -136,13 +147,15 @@ let g:deoplete#sources#jedi#show_docstring = 1
 
 " deoplete
 let g:deoplete#enable_at_startup = 1
+
+call deoplete#custom#source('_', 'converters',
+		\ ['converter_auto_paren'])
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
+
 " ultisnips
 let g:UltiSnipsExpandTrigger = "<C-j>"
-let g:UltiSnipsJumpForwardTrigger = "<C-j>"
-let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
 
 " multi cursors
 " let g:multi_cursor_use_default_mapping=0
@@ -158,3 +171,6 @@ nmap <Leader>r :NERDTreeFocus<cr>R<c-w><c-p>
 
 " Rainbow parentheses
 let g:rainbow_active = 1
+
+" clipboard
+set clipboard+=unnamedplus
